@@ -9,28 +9,46 @@ export default function (app) {
       try {
         await client.connect();
         
-        // Get current number of visits and then increment it
+        // Get current number of visits
         const db = client.db('contadorVis');
         const collection = db.collection('contador');
-
-        // Get the only document in the collection
         const result = await collection.findOne({});
-        
-        // Get the attribute "visitas", return it and increment it by 1
         const visitas = result.visitas;
-        await collection.updateOne({}, { $set: { visitas: visitas + 1 } });
-
         return visitas;
+        
       } catch (error) {
         console.error('Error:', error);
         throw new Error('Error en el servidor');
-      }finally {
+      } finally {
+        await client.close();
+      }
+    },
+    async create(data) {
+      try {
+        await client.connect();
+        
+        // Increment the number of visits by 1
+        const db = client.db('contadorVis');
+        const collection = db.collection('contador');
+        const result = await collection.findOneAndUpdate(
+          {},
+          { $inc: { visitas: 1 } },
+          { returnDocument: 'after' }
+        );
+
+        // Return the updated number of visits
+        return result.visitas;
+
+      } catch (error) {
+        console.error('Error:', error);
+        throw new Error('Error en el servidor');
+      } finally {
         await client.close();
       }
     },
   });
 
-  // Add other service methods like create, update, remove as needed
+  // Add other service methods like update, remove as needed
 
   // Get the wrapped service object, initialize our service
   const service = app.service('contadorVis');
