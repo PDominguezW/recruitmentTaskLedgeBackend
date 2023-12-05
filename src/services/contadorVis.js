@@ -1,15 +1,10 @@
-import { MongoClient } from 'mongodb';
-
 export default function (app) {
-  const connectionString = app.get('mongodb');
-  const client = new MongoClient(connectionString, {});
 
   app.use('/contadorVis', {
     async find() {
       try {
-        await client.connect();
-        
         // Get current number of visits
+        const client = app.get('mongodbClient');
         const db = client.db('contadorVis');
         const collection = db.collection('contador');
         const result = await collection.findOne({});
@@ -20,14 +15,12 @@ export default function (app) {
         console.error('Error:', error);
         throw new Error('Error en el servidor');
       } finally {
-        await client.close();
       }
     },
     async create(data) {
       try {
-        await client.connect();
-        
         // Increment the number of visits by 1
+        const client = app.get('mongodbClient');
         const db = client.db('contadorVis');
         const collection = db.collection('contador');
         const result = await collection.findOneAndUpdate(
@@ -43,7 +36,6 @@ export default function (app) {
         console.error('Error:', error);
         throw new Error('Error en el servidor');
       } finally {
-        await client.close();
       }
     },
   });

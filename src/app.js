@@ -39,11 +39,12 @@ app.configure(
     }
   })
 )
+// Configure contadorVis when mongodb is ready
 app.configure(mongodb)
+app.configure(contadorVis)
 
 app.configure(services)
 app.configure(channels)
-app.configure(contadorVis);
 
 // Configure a middleware for 404s and the error handler
 app.use(notFound())

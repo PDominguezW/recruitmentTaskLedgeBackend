@@ -8,6 +8,5 @@
   "paginate": {
     "default": 10,
     "max": 50
-  },
-  "mongodb": "mongodb+srv://dominguezpdw:Manolo963963@cluster0.sexnmal.mongodb.net/?retryWrites=true&w=majority"
+  }
 }
